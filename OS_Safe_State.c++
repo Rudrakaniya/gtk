@@ -14,17 +14,23 @@ int32_t main(){
     std ::cout << std ::endl << "Enter the number of processes  __";
     std ::cin >> noProcesses;
 
-
-    std ::cout<< std ::endl<< "Enter the "
+    
+    //Taking the input of all the occupied instances of all the processes.
+    std ::cout << std ::endl << "Enter the occupied instances of " << noProcesses << "different processes." << std ::endl;
+    
     for (int i = 0; i < noProcesses; ++i)
     {
         std ::vector<int> arr(noResource);
-
+        std ::cout << std ::endl << "Enter " << noResource << " values for the P" << i << " process." << std ::endl;
+        
         for (int j = 0; j < noResource; ++j)
         {
-            cin>> 
+            std ::cin >> arr[j];
         }
+        //Assigning the arr to Allocated vector. 
+        allocated.push_back(arr);
     }
 
+    
         return 0;
 }
