@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "vector": "cpp"
+    },
+    "editor.tokenColorCustomizations": {
+        "comments": "#1cee2e"
+    }
+}
