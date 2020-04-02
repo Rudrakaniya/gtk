@@ -21,7 +21,7 @@ int32_t main(){
     for (int i = 0; i < noProcesses; ++i)
     {
         std ::vector<int> arr(noResource);
-        std ::cout << std ::endl << "Enter " << noResource << " values for the P" << i << " process." << std ::endl;
+        std ::cout << std ::endl << "Enter " << noResource << " space seprated values for the P" << i << " process." << std ::endl;
         
         for (int j = 0; j < noResource; ++j)
         {
@@ -31,6 +31,22 @@ int32_t main(){
         allocated.push_back(arr);
     }
 
-    
-        return 0;
+    //Taking the input for the max instances needed
+    std ::cout << std ::endl << "Enter the maximum number of instances required for each " << noProcesses << " processes.";
+
+    for (int i = 0; i < noProcesses; ++i)
+    {
+        std ::vector<int> arr(noResource);
+        std ::cout << std ::endl << "Enter " << noResource << " space seprated values for the P" << i << " process." << std ::endl;
+        
+        for (int j = 0; j < noResource; ++j)
+        {
+            std ::cin >> arr[j];
+        }
+        //Assigning the arr to Allocated vector. 
+        max.push_back(arr);
+    }
+
+
+    return 0;
 }
