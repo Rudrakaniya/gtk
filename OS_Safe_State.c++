@@ -1,136 +1,123 @@
 //break_the_bond
 //jatt_james_bond
 #include<bits/stdc++.h>
-#include<unistd.h>
-//#define endl '\n'
-int32_t main(){
-    int noProcesses, noResource, additionalReq, xvv{0};
-    std ::vector<std ::vector<int>> allocated;
-    std ::vector<std ::vector<int>> max;
-    std ::vector<int> avail;
+using namespace std;
+typedef vector< vector<int> > Matrix;
+bool fredo = false;
 
-    std ::cout << std ::endl << "Enter the number of resources __";
-    std ::cin >> noResource;
-    
-    //Enter the avilable resourses.
-    std ::cout << std ::endl << "Enter "<<noResource << " space seprarted values for the avalible resourses"<< std ::endl;
-    for (int i = 0; i < noResource;++i){
-        int t;
-        std ::cin >> t;
-        avail.push_back(t);
-    }
-
-    std ::cout << std ::endl << "Enter the number of processes  __";
-    std ::cin >> noProcesses;
-
-    
-    //Taking the input of all the occupied instances of all the processes.
-    std ::cout << std ::endl << "Enter the occupied instances of " << noProcesses << "different processes." << std ::endl;
-    
-    for (int i = 0; i < noProcesses; ++i)
+bool bankerHere(int processes, int resources, Matrix& need, vector<int> avail, Matrix& alloc, int totalResources){
+    vector<bool> executed(processes, false); 
+    for (int k = 0; k < processes; k++)
     {
-        std ::vector<int> arr(noResource);
-        std ::cout << std ::endl << "Enter " << noResource << " space seprated values for the P" << i << " process." << std ::endl;
-        
-        for (int j = 0; j < noResource; ++j)
-        {
-            std ::cin >> arr[j];
-        }
-        //Assigning the arr to Allocated vector. 
-        allocated.push_back(arr);
-    }
-
-    // for (int i = 0; i < noProcesses; ++i){
-    //     for (int j = 0; j < noResource; ++j){
-    //         std ::cout << allocated[i][j] << " ";
-    //     }
-    //     std ::cout << std ::endl;
-    // }
-
-    //Taking the input for the max instances needed
-    std ::cout << std ::endl << "Enter the maximum number of instances required for each " << noProcesses << " processes.";
-
-    for (int i = 0; i < noProcesses; ++i)
-    {
-        std ::vector<int> arr(noResource);
-        std ::cout << std ::endl << "Enter " << noResource << " space seprated values for the P" << i << " process." << std ::endl;
-
-        for (int j = 0; j < noResource; ++j)
-        {
-            std ::cin >> arr[j];
-        }
-        //Assigning the arr to Max vector.
-        max.push_back(arr);
-    }
-
-        std ::vector<std ::vector<int>> required;
-        //Calculating the required resourses.
-
-        for (int i = 0; i < noProcesses; ++i )
-        {
-            std ::vector<int> arr(noResource);
-            for (int j = 0; j < noResource; ++j)
-            {
-                arr[j] = max[i][j] - allocated[i][j];
-            }
-            //Assigning the arr to required vector.
-            required.push_back(arr);
-        }
-        system("clear");
-        std ::cout << "Calculating required resourses..."<<std ::endl;
-        usleep(2000000);
-
-        std ::cout << std ::endl << "Enter the number of independent requests you want to enter __";
-        std ::cin >> additionalReq;
-
-        for (int i = 0; i < additionalReq;++i)
-        {
-            std ::vector<int> arr(noResource);
-            std ::cout << std ::endl << "Enter " << noResource << " space seprated values for your " << additionalReq << " independent requests." << std ::endl;
-
-            for (int j = 0; j < noResource; ++j)
-            {
-                std ::cin >> arr[i];
-            }
-            //Assigning the arr to required vector.
-            required.push_back(arr);
-        }
-
-    std ::vector<bool> boo((noProcesses + additionalReq), false);
-    std ::vector<int> answer(noProcesses + additionalReq);
-
-
-        for (int vv = 0; vv < (noProcesses + additionalReq); ++vv){
-            for (int i = 0; i < (noProcesses + additionalReq); ++i){
-                if(!boo[i])
-                {
-                    bool quantum = false;
-                    for (int j = 0; i < noResource; ++j)
-                    {
-                        if(required[i][j] > avail[j])
-                        {
-                            quantum = true;
-                            break;
-                        }
+        for (int i = 0; i < processes; i++) { 
+            if (executed[i] == false) { 
+  
+                int flag = 0; 
+                for (int j = 0; j < resources; j++) { 
+                    if (need[i][j] > avail[j]){ 
+                        flag = 1; 
+                        break; 
+                    } 
+                } 
+  
+                if (flag == 0) { 
+                    for (int y = 0; y < resources; y++){
+                        avail[y] += alloc[i][y]; 
                     }
-
-                    if(!quantum)
-                    {
-                        answer[xvv++] = i;
-                        for (int k = 0; k < noResource; ++k)
-                        {
-                            avail[k] += allocated[i][k];
-                        }
-                        boo[i] = true;
-                    }
+                    executed[i] = true;
+                    //cout << "a" << endl;
                 }
-            }
+            } 
         }
+    }
 
-        std ::cout << std ::endl << "Following is the SAFE Sequence" << std ::endl;
-        for (int i = 0; i < (noProcesses + additionalReq) - 1; i++)
-            std ::cout << " P" << answer[i] << " ->";
-        std ::cout << " P" << answer[(noProcesses + additionalReq) - 1] <<std ::endl;
+    int t{0};
+    for (int i = 0; i < resources; ++i)
+	{
+		t += avail[i];
+	}
+
+    if(t == totalResources){
+		cout << endl << "Currently, the system is in safe state." << endl;
+        return true;
+    }
+    else
+    {
+        cout << endl << "The system has entered the deadlock state which is an unsafe state." << endl;
+        //cout << "t = " << t << " total = " << totalResources << endl;
+        return false;
+    }
+}
+
+int32_t main(){
+    int processes, resources, totalResources{0};;
+    cout << "Enter the number of processes __";
+    cin >> processes;
+
+    cout << "Enter the number of resources __";
+    cin >> resources;
+
+    Matrix alloc(processes, vector<int>(resources));
+    Matrix max(processes, vector<int>(resources));
+    Matrix req(processes, vector<int>(resources));
+
+    cout << endl << "Enter the Allocated matrix :- "<<endl;
+
+	for (int i = 0; i < processes; ++i){
+		for (int j = 0; j < resources; ++j){
+			cin >> alloc[i][j];
+            totalResources += alloc[i][j];
+		}
+	}
+    cout << endl << "Enter the Max need matrix :-" << endl;
+
+	for (int i = 0; i < processes; ++i){
+		for (int j = 0; j < resources;++j){
+			cin >> max[i][j];
+            req[i][j] = max[i][j] - alloc[i][j];
+        }
+    }
+
+    vector<int> avail(resources);
+    cout << "Enter the Available number of resourses left for all " << resources << " resources :- " << endl;
+    for (int i = 0; i < resources;++i){
+		cin >> avail[i];
+        totalResources += avail[i];
+	}
+
+    bool boo = bankerHere(processes, resources, req , avail, alloc, totalResources);
+
+    int noReq;
+    cout << endl
+         << "Enter the number of requests you want to perform __";
+    cin >> noReq;
+
+    for (int i = 0; i < noReq; ++i){
+        Matrix vv = alloc;
+        Matrix xvv = req;
+        vector<int> anvi = avail;
+        int pp, tr = totalResources;
+        cout << "The the process for which you want to request = ";
+        cin >> pp;
+        cout << "Enter the values of your request: - " << endl;
+        int sg[3];
+        for (int l = 0; l < 3; ++l){
+            cin >> sg[l];
+            vv[pp][l] += sg[l];
+            xvv[pp][l] -= sg[l];
+            anvi[l] -= sg[l];
+        }           
+        boo = bankerHere(processes, resources, xvv , anvi, vv, tr);
+
+        if(boo){
+            cout << endl
+                 << "Thus, REQ" << i + 1 << " can be permitted." << endl;
+
+        }else{
+            cout << endl
+                 << "Thus, REQ" << i + 1 << " will not be permitted." << endl;
+        }
+    }
 
         return 0;
 }
